@@ -19,10 +19,24 @@ function multiply(a, b){
     return a*b;
 };
 
-console.log(add(5, 4));
+function operate(a, b, operator){
 
-console.log(subtract(20, 15));
+    if(operator === "add"){
+        console.log(add(a, b));
+    }
+    else if(operator === "subtract"){
+        console.log(subtract(a, b));
 
-console.log(multiply(15, 4));
+    }
+    else if(operator === "multiply"){
+        console.log(multiply(a, b));
+    }
+    else if(operator === "divide"){
+        console.log(divide(a, b));
+    }
+}
 
-console.log(divide(28, 7));
+operate(5, 4, "add");
+operate(5, 4, "subtract");
+operate(5, 4, "multiply");
+operate(10, 5, "divide");
