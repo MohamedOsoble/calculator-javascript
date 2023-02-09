@@ -1,10 +1,10 @@
 
 const keyStrokes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "c"];
-const operators = ["+", "-", "*", "/"];
+const operators = ["+", "-", "*", "/", "="];
 
 let currentInputText = document.getElementById('calc-display');
 let currentExpression = 0;
-let currentOperator = "";
+let currentOperator = "+";
 let firstTerm = 0;
 let secondTerm = 0;
 let currentTerm = 0;
@@ -42,17 +42,17 @@ function multiply(a, b){
 // select which operation to run
 function operate(a, b, operator){
 
-    if(operator === "add"){
+    if(operator === "+"){
         return add(a, b);
     }
-    else if(operator === "subtract"){
+    else if(operator === "-"){
         return subtract(a, b);
 
     }
-    else if(operator === "multiply"){
+    else if(operator === "*"){
         return multiply(a, b);
     }
-    else if(operator === "divide"){
+    else if(operator === "/"){
         return divide(a, b);
     }
 }
@@ -65,6 +65,36 @@ calcBtns.forEach((btn) => {
     });
 });
 
+function updateDisplay(keyStroke){
+
+    if(currentInputText.value === "0"){
+        currentInputText.value = keyStroke;
+    }
+    else {
+            currentInputText.value = currentInputText.value + keyStroke;
+            currentTerm = currentTerm + keyStroke;  
+    };
+};
+
+function evalExpression(keyStroke){
+
+    valueExpression = operate(parseInt(firstTerm), parseInt(secondTerm), keyStroke);
+    firstExpression = valueExpression;
+    currentInputText.value = firstExpression;
+    currentTerm = 0;
+    return 1;
+};
+
+function updateExpression(keyStroke){
+    firstTerm = currentInputText.value;
+    currentExpression = 1;
+    if(keyStroke != "="){
+        currentInputText.value = currentInputText.value + keyStroke;
+        currentTerm = 0;
+        currentOperator = keyStroke;
+    };
+}
+
 // process each keyStroke
 function input(keyStroke) {
 
@@ -72,17 +102,9 @@ function input(keyStroke) {
     if(keyStrokes.includes(keyStroke)){
         if(keyStroke === "c"){
             clearFunction();
-            return 1;
         }
         else{
-            if(currentInputText.value === "0"){
-                currentInputText.value = keyStroke;
-            }
-            else{
-                    currentInputText.value = currentInputText.value + keyStroke;
-                    currentTerm = currentTerm + keyStroke;  
-            }
- 
+            updateDisplay(keyStroke);
         };
 
     }
@@ -92,53 +114,16 @@ function input(keyStroke) {
         // if it is an operator, check how many expressions there are
         // if this is the first expression, update the first term and then the calculator display with the operator
         if(currentExpression == 0){
-            firstTerm = currentInputText.value;
-            currentExpression = 1;
-            if(keyStroke != "="){
-                currentInputText.value = currentInputText.value + keyStroke;
-                currentTerm = 0;
-            };
+            updateExpression(keyStroke);
         }
         // if there are more than one expression, evaluate and then update terms
         else{
             secondTerm = currentTerm;
-            currentExpression++;
-            // operate for addition
-            if(keyStroke == "+"){
-                valueExpression = operate(parseInt(firstTerm), parseInt(secondTerm), "add");
-                firstExpression = valueExpression;
-                currentInputText.value = firstExpression;
-                currentTerm = 0;
-            }
-
-            // operate for subtraction
-            else if(keyStroke == "-"){
-                valueExpression = operate(parseInt(firstTerm), parseInt(secondTerm), "subtract");
-                firstExpression = valueExpression;
-                currentInputText.value = firstExpression;
-                currentTerm = 0;
-            }
-            // operate for multiplication
-            else if(keyStroke == "*"){
-                valueExpression = operate(parseInt(firstTerm), parseInt(secondTerm), "multiply");
-                firstExpression = valueExpression;
-                currentInputText.value = firstExpression;
-                currentTerm = 0;
-            }
-            // operate for division
-            else if(keyStroke == "*"){
-                valueExpression = operate(parseInt(firstTerm), parseInt(secondTerm), "divide");
-                firstExpression = valueExpression;
-                currentInputText.value = firstExpression;
-                currentTerm = 0;
-            }
+            currentExpression = 0;
+            evalExpression(currentOperator);
+            currentOperator = keyStroke;
+            updateExpression(keyStroke);
         };
-        console.log("operator keystroke");
     };
     return 1;
 };
-
-operate(5, 4, "add");
-operate(5, 4, "subtract");
-operate(5, 4, "multiply");
-operate(10, 5, "divide");
