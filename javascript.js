@@ -10,6 +10,13 @@ let secondTerm = 0;
 let currentTerm = 0;
 let valueExpression = 0;
 
+
+// add keyboard functionality
+document.addEventListener('keydown', (event) => {
+    var name = event.key;
+    input(name);
+  }, false);
+
 function clearFunction(){
     currentExpression = 0;
     firstTerm = 0;
